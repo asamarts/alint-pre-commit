@@ -1,0 +1,25 @@
+- id: alint
+  name: alint
+  description: >-
+    Lint repository structure, filenames, and file content with alint.
+    Reads `.alint.yml` at the repo root; walks the tree honoring
+    `.gitignore`; reports violations. Non-mutating. Installs the prebuilt
+    alint wheel from PyPI (no Rust toolchain).
+  entry: alint check
+  language: python
+  pass_filenames: false
+  always_run: true
+  types: [text]
+
+- id: alint-fix
+  name: alint (fix)
+  description: >-
+    Apply alint auto-fixes for violations whose rule declares a fix
+    strategy. Mutating, so it defaults to stages [manual] and runs only
+    when explicitly invoked via `pre-commit run alint-fix`.
+  entry: alint fix
+  language: python
+  pass_filenames: false
+  always_run: true
+  stages: [manual]
+  types: [text]

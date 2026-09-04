@@ -1,0 +1,30 @@
+# pre-commit mirror for alint. This project carries NO alint source: it is a
+# thin language: python front-end whose only dependency is the prebuilt alint
+# wheel, pinned to a single version. pre-commit installs this project into the
+# hook environment, which pulls that wheel and puts the `alint` binary on PATH.
+#
+# The version below and the `alint==` pin move together and are updated by
+# mirror.py (run daily by .github/workflows/mirror.yml), which polls PyPI for the
+# newest alint release and tags v<version>. Do not hand-edit the version.
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alint-pre-commit"
+version = "0.16.0"
+description = "pre-commit hook mirror for alint: installs the prebuilt alint wheel and exposes its hooks."
+readme = "README.md"
+requires-python = ">=3.7"
+license = "MIT"
+dependencies = ["alint==0.16.0"]
+
+[project.urls]
+Homepage = "https://github.com/asamarts/alint-pre-commit"
+alint = "https://github.com/asamarts/alint"
+
+# No Python modules ship here; this project exists only to declare the alint
+# dependency for pre-commit. Declaring an empty module list disables setuptools
+# auto-discovery so `pip install .` installs just the pinned dependency.
+[tool.setuptools]
+py-modules = []

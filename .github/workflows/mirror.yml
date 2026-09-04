@@ -1,0 +1,40 @@
+name: Mirror alint releases
+
+# Keep this pre-commit mirror in step with alint on PyPI. mirror.py polls the
+# PyPI JSON API for the newest alint release and, when it is newer than the pin,
+# re-pins pyproject.toml, commits, and tags v<version>. It only ever tags a
+# version whose wheel is live on PyPI, so a pre-commit `rev` is never broken.
+#
+# Self-contained: the push uses the repo's own GITHUB_TOKEN (contents: write), so
+# no cross-repo secret is needed. Note GitHub disables scheduled workflows after
+# ~60 days of repository inactivity; a manual "Run workflow" re-enables it, and
+# each release tags this repo (activity), so that only bites during a long gap.
+
+on:
+  schedule:
+    - cron: "0 7 * * *" # daily; alint releases are infrequent, so this is plenty
+  workflow_dispatch: {}
+
+permissions:
+  contents: write # commit + push + tag within this repo
+
+concurrency:
+  group: mirror
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0 # need existing tags so mirror.py can skip already-mirrored versions
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: mirror the latest alint release
+        run: python3 mirror.py
