@@ -12,12 +12,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "alint-pre-commit"
-version = "0.16.1"
+version = "0.17.0"
 description = "pre-commit hook mirror for alint: installs the prebuilt alint wheel and exposes its hooks."
 readme = "README.md"
 requires-python = ">=3.7"
 license = "MIT"
-dependencies = ["alint==0.16.1"]
+dependencies = ["alint==0.17.0"]
 
 [project.urls]
 Homepage = "https://github.com/asamarts/alint-pre-commit"
